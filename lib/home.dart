@@ -139,9 +139,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           .outerShadowMd
                           .make()
                           .onTap(() {
-                        Get.to(() => MovieDetails(
-                            //title: categoryList[index]
-                            ));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => MovieDetails(
+                                  movieDataModel: items[index],
+                                )));
+                        // Get.to(() => MovieDetails(
+                        //     //title: categoryList[index]
+                        //     ));
                       });
                     });
               } else {

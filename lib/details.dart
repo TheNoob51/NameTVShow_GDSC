@@ -1,46 +1,22 @@
 import 'package:nameshow/const/linkers.dart';
 
 class MovieDetails extends StatelessWidget {
-  const MovieDetails({super.key});
+  final MovieDataModel movieDataModel;
+  const MovieDetails({Key? key, required this.movieDataModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('API Demo'),
-        ),
-        body: FutureBuilder<Map<String, dynamic>>(
-          future: fetchData(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              // Use the data from the API response
-              final data = snapshot.data;
-              return Text('Show Name: ${data?['name']}');
-            }
-          },
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(movieDataModel.name.toString()),
+      ),
+      body: Column(
+        children: [
+          Image.network(movieDataModel.imageURL.toString()),
+          Text(movieDataModel.language.toString()),
+        ],
       ),
     );
   }
 }
-
-
-
-
-
-// class MovieDetails extends StatefulWidget {
-//   const MovieDetails({super.key});
-
-//   @override
-//   State<MovieDetails> createState() => _MovieDetailsState();
-// }
-
-// class _MovieDetailsState extends State<MovieDetails> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Placeholder();
-//   }
-// }
