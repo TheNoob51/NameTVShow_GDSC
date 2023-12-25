@@ -1,5 +1,7 @@
 // ignore_for_file: camel_case_types
 
+import 'package:nameshow/const/colors.dart';
+
 import 'const/linkers.dart';
 
 class splashscreen extends StatefulWidget {
@@ -26,19 +28,24 @@ class _splashscreenState extends State<splashscreen> {
   @override
   //designing screen with image
   Widget build(BuildContext context) {
-    // return const Scaffold(
-    //     //backgroundColor: golden,
-    //     body: DecoratedBox(
-    //   // BoxDecoration takes the image
-    //   decoration: BoxDecoration(
-    //     // Image set to background of the body
-    //     image: DecorationImage(image: AssetImage(splashimg), fit: BoxFit.cover),
-    //   ),
-    // ));
-
-    return const Scaffold(
-      body: Center(
-        child: Text('Hello World'),
+    return Scaffold(
+      body: Container(
+        color: black,
+        child: const Row(
+          children: [
+            Column(
+              children: [
+                Expanded(
+                  child: Image(
+                    image: AssetImage('jsonfile/bg1.png'),
+                    alignment: Alignment.centerLeft,
+                    fit: BoxFit.fitHeight,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

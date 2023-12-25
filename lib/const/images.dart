@@ -1,1 +1,1 @@
-const splashimg = "assets/images/bg1.png";
+const splashimg = "jsonfile/bg1.png";

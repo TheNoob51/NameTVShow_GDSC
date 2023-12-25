@@ -1,7 +1,16 @@
 import 'package:nameshow/const/linkers.dart';
+import 'package:flutter/services.dart' as rootbundle;
 
 class CustomSearchDelegate extends SearchDelegate {
-  List<String> searchTerms = ["Apple", "Banana", "Pear"];
+  Future<List<MovieDataModel>> ReadJsonData() async {
+    final jsondata =
+        await rootbundle.rootBundle.loadString('jsonfile/allseries.json');
+    final list = json.decode(jsondata) as List<dynamic>;
+
+    return list.map((e) => MovieDataModel.fromJson(e)).toList();
+  }
+
+  List<String> searchTerms = ["All Rise", "All American", "All That"];
 
   @override
   List<Widget> buildActions(BuildContext context) {
