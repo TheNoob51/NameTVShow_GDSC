@@ -74,14 +74,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 var items = data.data as List<MovieDataModel>;
                 return GridView.builder(
                     shrinkWrap: true,
-                    itemCount: 10,
+                    itemCount: items.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             mainAxisSpacing: 8,
                             crossAxisSpacing: 8,
-                            mainAxisExtent: 240),
+                            mainAxisExtent: 250),
                     itemBuilder: (context, index) {
+                      final rating = items[index].rating ?? 0;
                       return Column(
                         children: [
                           // Image.asset(categoryImages[index],
@@ -103,18 +104,36 @@ class _MyHomePageState extends State<MyHomePage> {
                                     items[index].imageURL.toString()),
                                 fit: BoxFit.fill),
                           ),
-                          const Divider(),
-                          "Rating : ${items[index].rating.toString()}"
-                              .text
-                              .align(TextAlign.center)
-                              .make(),
+                          const Divider(
+                            thickness: 1.0,
+                            color: grey,
+                          ),
+
+                          (rating == 0)
+                              ? "No Rating".text.align(TextAlign.center).make()
+                              : VxRating(
+                                  isSelectable: false,
+                                  value: rating,
+                                  onRatingUpdate: (value) {},
+                                  normalColor: grey,
+                                  selectionColor: golden,
+                                  count: 5,
+                                  size: 25,
+                                  maxRating: 10,
+                                ),
+
+                          // "Rating : ${rating.toString()}"
+                          //     .text
+                          //     .align(TextAlign.center)
+                          //     .make(),
+
                           const Text("See More...",
                               style: TextStyle(
                                   color: black, fontWeight: FontWeight.bold))
                         ],
                       )
                           .box
-                          .white
+                          .color(const Color.fromARGB(173, 255, 255, 255))
                           .rounded
                           .clip(Clip.antiAlias)
                           .outerShadowMd

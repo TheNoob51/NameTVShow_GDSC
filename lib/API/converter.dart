@@ -24,10 +24,11 @@ class MovieDataModel {
   MovieDataModel.fromJson(Map<String, dynamic> json) {
     score = json['score'];
     name = json['name'];
-    type = json['name'];
-    language = json['name'];
+    type = json['type'];
+    language = json['language'];
     premiered = json['premiered'];
     ended = json['ending'];
+    rating = json['rating'];
     imageURL = json['image'];
     summary = json['summary'];
   }

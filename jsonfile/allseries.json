@@ -228,7 +228,7 @@
                 "Saturday"
             ]
         },
-        "rating": 6,
+        "rating": 6.0,
         "weight": 83,
         "network": {
             "id": 27,
@@ -279,7 +279,7 @@
             "time": "",
             "days": []
         },
-        "rating": 8,
+        "rating": 8.0,
         "weight": 71,
         "network": null,
         "webChannel": {
