@@ -27,7 +27,7 @@ class MovieDataModel {
     type = json['type'];
     language = json['language'];
     premiered = json['premiered'];
-    ended = json['ending'];
+    ended = json['ended'];
     rating = json['rating'];
     imageURL = json['image'];
     summary = json['summary'];
