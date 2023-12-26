@@ -38,8 +38,8 @@ class _splashscreenState extends State<splashscreen> {
                 Expanded(
                   child: Image(
                     image: AssetImage('jsonfile/bg1.png'),
-                    alignment: Alignment.centerLeft,
-                    fit: BoxFit.fitHeight,
+                    alignment: Alignment.center,
+                    fit: BoxFit.fill,
                   ),
                 ),
               ],
