@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:nameshow/const/colors.dart';
 import 'package:nameshow/const/exitscreen.dart';
 import 'package:nameshow/const/linkers.dart';
@@ -15,6 +16,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  ConnectivityResult _connectivityResult = ConnectivityResult.none;
+  @override
+  void initState() {
+    super.initState();
+    _checkConnectivity();
+  }
+
+  Future<void> _checkConnectivity() async {
+    final ConnectivityResult result = await Connectivity().checkConnectivity();
+    setState(() {
+      _connectivityResult = result;
+    });
+  }
+
 //TO REMOVE
   Future<List<MovieDataModel>> ReadJsonData() async {
     final jsondata =
@@ -61,110 +76,135 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Container(
           color: black,
           padding: const EdgeInsets.all(15),
-          child: FutureBuilder(
-            future: ReadJsonData(),
-            builder: (context, data) {
-              //if
-              if (data.hasError) {
-                return Center(child: Text("${data.error}"));
-              }
-              //else
-
-              else if (data.hasData) {
-                var items = data.data as List<MovieDataModel>;
-                return GridView.builder(
-                    shrinkWrap: true,
-                    itemCount: items.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8,
-                            mainAxisExtent: 250),
-                    itemBuilder: (context, index) {
-                      final rating = items[index].rating ?? 0;
-                      final imgurl = items[index].imageURL ?? "No Image";
-                      return Column(
-                        children: [
-                          // Image.asset(categoryImages[index],
-                          //     height: 150, width: 200, fit: BoxFit.cover),
-                          10.heightBox,
-                          items[index]
-                              .name
-                              .toString()
-                              .text
-                              .color(black)
-                              .fontWeight(FontWeight.bold)
-                              .align(TextAlign.center)
-                              .make(),
-                          10.heightBox,
-                          (imgurl == "No Image")
-                              ? const SizedBox(
-                                  height: 140,
-                                  child: Image(
-                                      image: NetworkImage(
-                                          "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png"),
-                                      fit: BoxFit.fill),
-                                )
-                              : SizedBox(
-                                  height: 140,
-                                  child: Image(
-                                      image: NetworkImage(
-                                          items[index].imageURL.toString()),
-                                      fit: BoxFit.fill),
-                                ),
-
-                          const Divider(
-                            thickness: 1.0,
-                            color: grey,
-                          ),
-
-                          (rating == 0)
-                              ? "No Rating".text.align(TextAlign.center).make()
-                              : VxRating(
-                                  isSelectable: false,
-                                  value: rating,
-                                  onRatingUpdate: (value) {},
-                                  normalColor: grey,
-                                  selectionColor: golden,
-                                  count: 5,
-                                  size: 25,
-                                  maxRating: 10,
-                                ),
-
-                          // "Rating : ${rating.toString()}"
-                          //     .text
-                          //     .align(TextAlign.center)
-                          //     .make(),
-
-                          const Text("See More...",
-                              style: TextStyle(
-                                  color: black, fontWeight: FontWeight.bold))
-                        ],
-                      )
-                          .box
-                          .color(const Color.fromARGB(173, 255, 255, 255))
-                          .rounded
-                          .clip(Clip.antiAlias)
-                          .outerShadowMd
-                          .make()
-                          .onTap(() {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => MovieDetails(
-                                  movieDataModel: items[index],
-                                )));
-                        // Get.to(() => MovieDetails(
-                        //     //title: categoryList[index]
-                        //     ));
-                      });
-                    });
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
+          child: _buildContent(),
         ),
       ),
+    );
+  }
+
+  Widget _buildContent() {
+    if (_connectivityResult == ConnectivityResult.none) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              "No Internet Connection",
+              style: TextStyle(color: Colors.red),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await _checkConnectivity();
+                if (_connectivityResult != ConnectivityResult.none) {
+                  setState(() {});
+                }
+              },
+              child: Text("Retry"),
+            ),
+          ],
+        ),
+      );
+    }
+    return FutureBuilder(
+      future: ReadJsonData(),
+      builder: (context, data) {
+        //if
+        if (data.hasError) {
+          return Center(child: Text("${data.error}"));
+        }
+        //else
+
+        else if (data.hasData) {
+          var items = data.data as List<MovieDataModel>;
+          return GridView.builder(
+              shrinkWrap: true,
+              itemCount: items.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
+                  mainAxisExtent: 250),
+              itemBuilder: (context, index) {
+                final rating = items[index].rating ?? 0;
+                final imgurl = items[index].imageURL ?? "No Image";
+                return Column(
+                  children: [
+                    // Image.asset(categoryImages[index],
+                    //     height: 150, width: 200, fit: BoxFit.cover),
+                    10.heightBox,
+                    items[index]
+                        .name
+                        .toString()
+                        .text
+                        .color(black)
+                        .fontWeight(FontWeight.bold)
+                        .align(TextAlign.center)
+                        .make(),
+                    10.heightBox,
+                    (imgurl == "No Image")
+                        ? const SizedBox(
+                            height: 140,
+                            child: Image(
+                                image: NetworkImage(
+                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png"),
+                                fit: BoxFit.fill),
+                          )
+                        : SizedBox(
+                            height: 140,
+                            child: Image(
+                                image: NetworkImage(
+                                    items[index].imageURL.toString()),
+                                fit: BoxFit.fill),
+                          ),
+
+                    const Divider(
+                      thickness: 1.0,
+                      color: grey,
+                    ),
+
+                    (rating == 0)
+                        ? "No Rating".text.align(TextAlign.center).make()
+                        : VxRating(
+                            isSelectable: false,
+                            value: rating,
+                            onRatingUpdate: (value) {},
+                            normalColor: grey,
+                            selectionColor: golden,
+                            count: 5,
+                            size: 25,
+                            maxRating: 10,
+                          ),
+
+                    // "Rating : ${rating.toString()}"
+                    //     .text
+                    //     .align(TextAlign.center)
+                    //     .make(),
+
+                    const Text("See More...",
+                        style: TextStyle(
+                            color: black, fontWeight: FontWeight.bold))
+                  ],
+                )
+                    .box
+                    .color(const Color.fromARGB(173, 255, 255, 255))
+                    .rounded
+                    .clip(Clip.antiAlias)
+                    .outerShadowMd
+                    .make()
+                    .onTap(() {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => MovieDetails(
+                            movieDataModel: items[index],
+                          )));
+                  // Get.to(() => MovieDetails(
+                  //     //title: categoryList[index]
+                  //     ));
+                });
+              });
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }

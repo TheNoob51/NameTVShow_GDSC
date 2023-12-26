@@ -87,7 +87,7 @@ class MovieDetails extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  'Premiered Date: ${movieDataModel.premiered}',
+                                  'Premiered Date: ${movieDataModel.premiered ?? "No data available"}',
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -95,9 +95,12 @@ class MovieDetails extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              SizedBox(
+                                width: 45,
+                              ),
                               Expanded(
                                 child: Text(
-                                  'Ending Date: ${movieDataModel.ended}',
+                                  'Ending Date: ${movieDataModel.ended ?? " No data available"}',
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,

@@ -31,18 +31,14 @@ class _splashscreenState extends State<splashscreen> {
     return Scaffold(
       body: Container(
         color: black,
-        child: const Row(
+        child: const Column(
           children: [
-            Column(
-              children: [
-                Expanded(
-                  child: Image(
-                    image: AssetImage('jsonfile/bg1.png'),
-                    alignment: Alignment.center,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ],
+            Expanded(
+              child: Image(
+                image: AssetImage('jsonfile/bg1.png'),
+                alignment: Alignment.center,
+                fit: BoxFit.cover,
+              ),
             ),
           ],
         ),
