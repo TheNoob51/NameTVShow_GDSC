@@ -11,21 +11,27 @@ class MovieDetails extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: black,
+        backgroundColor: brown,
         title: Text(
           movieDataModel.name.toString(),
           style: const TextStyle(color: white),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: SingleChildScrollView(
-                child: Center(
-                  child: Container(
-                    color: red,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('jsonfile/backe.png'),
+            fit: BoxFit.fill,
+          ),
+        ),
+        // color: red,
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(34.0),
+                child: SingleChildScrollView(
+                  child: Center(
                     child: Column(
                       children: [
                         10.heightBox,
@@ -51,7 +57,7 @@ class MovieDetails extends StatelessWidget {
                         ),
                         10.heightBox,
                         Text(
-                          'Ratings: ${movieDataModel.rating}',
+                          'Ratings: ${movieDataModel.rating ?? "No Ratings"}',
                           style: const TextStyle(
                               color: black,
                               fontWeight: FontWeight.bold,
@@ -67,7 +73,7 @@ class MovieDetails extends StatelessWidget {
                         ),
                         20.heightBox,
                         Container(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(12.0),
                           decoration: BoxDecoration(
                               color: const Color.fromRGBO(88, 97, 107, 0.422),
                               border:
@@ -82,7 +88,7 @@ class MovieDetails extends StatelessWidget {
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 20.0,
+                                    fontSize: 18.0,
                                   ),
                                 ),
                               ),
@@ -92,7 +98,7 @@ class MovieDetails extends StatelessWidget {
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 20.0,
+                                    fontSize: 18.0,
                                   ),
                                 ),
                               ),
@@ -102,24 +108,24 @@ class MovieDetails extends StatelessWidget {
                         // 5.heightBox,
                         Row(
                           children: [
-                            Column(
-                              children: [
-                                10.heightBox,
-                                const Text(
-                                  'Summary : ',
-                                  style: TextStyle(
-                                      color: black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: Vx.dp24),
-                                ),
-                                const Text(
-                                  'Yoo',
-                                  style: TextStyle(
-                                      color: black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: Vx.dp24),
-                                ),
-                              ],
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  10.heightBox,
+                                  const Text(
+                                    'Summary : ',
+                                    style: TextStyle(
+                                        color: black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: Vx.dp24),
+                                  ),
+                                  Text(
+                                    '${movieDataModel.summary}',
+                                    style: const TextStyle(
+                                        color: black, fontSize: Vx.dp24),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         )
@@ -129,8 +135,8 @@ class MovieDetails extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

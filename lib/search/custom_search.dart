@@ -13,6 +13,15 @@ class CustomSearchDelegate extends SearchDelegate {
   List<String> searchTerms = ["All Rise", "All American", "All That"];
 
   @override
+  ThemeData appBarTheme(BuildContext context) {
+    return Theme.of(context).copyWith(
+      inputDecorationTheme: const InputDecorationTheme(
+        hintStyle: TextStyle(color: Colors.black),
+      ),
+    );
+  }
+
+  @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
@@ -35,9 +44,9 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     List<String> matchQuery = [];
-    for (var fruit in searchTerms) {
-      if (fruit.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(fruit);
+    for (var movie in searchTerms) {
+      if (movie.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(movie);
       }
     }
     return ListView.builder(
@@ -54,9 +63,9 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     List<String> matchQuery = [];
-    for (var fruit in searchTerms) {
-      if (fruit.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(fruit);
+    for (var movie in searchTerms) {
+      if (movie.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(movie);
       }
     }
     return ListView.builder(

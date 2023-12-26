@@ -9,3 +9,4 @@ const black = Color.fromARGB(255, 0, 0, 0);
 const grey = Color.fromARGB(255, 86, 99, 118);
 const buttongrey = Color.fromARGB(73, 88, 99, 114);
 const golden = Color.fromARGB(255, 180, 162, 0);
+const brown = Color.fromARGB(255, 90, 55, 4);
