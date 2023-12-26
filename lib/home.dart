@@ -83,6 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             mainAxisExtent: 250),
                     itemBuilder: (context, index) {
                       final rating = items[index].rating ?? 0;
+                      final imgurl = items[index].imageURL ?? "No Image";
                       return Column(
                         children: [
                           // Image.asset(categoryImages[index],
@@ -97,13 +98,22 @@ class _MyHomePageState extends State<MyHomePage> {
                               .align(TextAlign.center)
                               .make(),
                           10.heightBox,
-                          SizedBox(
-                            height: 140,
-                            child: Image(
-                                image: NetworkImage(
-                                    items[index].imageURL.toString()),
-                                fit: BoxFit.fill),
-                          ),
+                          (imgurl == "No Image")
+                              ? const SizedBox(
+                                  height: 140,
+                                  child: Image(
+                                      image: NetworkImage(
+                                          "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png"),
+                                      fit: BoxFit.fill),
+                                )
+                              : SizedBox(
+                                  height: 140,
+                                  child: Image(
+                                      image: NetworkImage(
+                                          items[index].imageURL.toString()),
+                                      fit: BoxFit.fill),
+                                ),
+
                           const Divider(
                             thickness: 1.0,
                             color: grey,

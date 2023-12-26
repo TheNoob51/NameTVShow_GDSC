@@ -37,8 +37,11 @@ class MovieDetails extends StatelessWidget {
                         10.heightBox,
                         ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
-                            child: Image.network(
-                                movieDataModel.imageURL.toString())),
+                            child: movieDataModel.imageURL != null
+                                ? Image.network(
+                                    movieDataModel.imageURL.toString())
+                                : Image.network(
+                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png")),
                         10.heightBox,
                         Text(
                           movieDataModel.name.toString(),
