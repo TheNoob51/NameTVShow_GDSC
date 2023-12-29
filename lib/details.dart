@@ -37,9 +37,9 @@ class MovieDetails extends StatelessWidget {
                         10.heightBox,
                         ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
-                            child: movieDataModel.imageURL != null
+                            child: movieDataModel.imageURL?.medium != null
                                 ? Image.network(
-                                    movieDataModel.imageURL.toString())
+                                    movieDataModel.imageURL!.medium.toString())
                                 : Image.network(
                                     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png")),
                         10.heightBox,
@@ -60,7 +60,7 @@ class MovieDetails extends StatelessWidget {
                         ),
                         10.heightBox,
                         Text(
-                          'Ratings: ${movieDataModel.rating ?? "No Ratings"}',
+                          'Ratings: ${movieDataModel.rating?.average ?? "No Ratings"}',
                           style: const TextStyle(
                               color: black,
                               fontWeight: FontWeight.bold,
@@ -95,7 +95,7 @@ class MovieDetails extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 45,
                               ),
                               Expanded(

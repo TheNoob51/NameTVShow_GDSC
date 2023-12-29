@@ -2,9 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:nameshow/const/colors.dart';
 import 'package:nameshow/const/exitscreen.dart';
 import 'package:nameshow/const/linkers.dart';
-
-//TO REMOVE
-import 'package:flutter/services.dart' as rootbundle;
+import 'package:http/http.dart' as http;
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -17,6 +15,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   ConnectivityResult _connectivityResult = ConnectivityResult.none;
+  List<MovieDataModel> _moviesData = [];
+
   @override
   void initState() {
     super.initState();
@@ -25,19 +25,38 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _checkConnectivity() async {
     final ConnectivityResult result = await Connectivity().checkConnectivity();
+    if (result != ConnectivityResult.none) {
+      await _fetchDataFromApi();
+    }
     setState(() {
       _connectivityResult = result;
     });
   }
 
-//TO REMOVE
-  Future<List<MovieDataModel>> ReadJsonData() async {
-    final jsondata =
-        await rootbundle.rootBundle.loadString('jsonfile/allseries.json');
-    final list = json.decode(jsondata) as List<dynamic>;
-
-    return list.map((e) => MovieDataModel.fromJson(e)).toList();
+  Future<void> _fetchDataFromApi() async {
+    try {
+      final response = await http
+          .get(Uri.parse('https://api.tvmaze.com/search/shows?q=all'));
+      // print('Response Body: ${response.body}');
+      if (response.statusCode == 200) {
+        final List<dynamic> list = json.decode(response.body);
+        _moviesData = list.map((e) => MovieDataModel.fromJson(e)).toList();
+      } else {
+        print('Failed to load data: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
   }
+
+//TO REMOVE
+  // Future<List<MovieDataModel>> ReadJsonData() async {
+  //   final jsondata =
+  //       await rootbundle.rootBundle.loadString('jsonfile/allseries.json');
+  //   final list = json.decode(jsondata) as List<dynamic>;
+
+  //   return list.map((e) => MovieDataModel.fromJson(e)).toList();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -99,111 +118,183 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {});
                 }
               },
-              child: Text("Retry"),
+              child: const Text("Retry"),
             ),
           ],
         ),
       );
     }
-    return FutureBuilder(
-      future: ReadJsonData(),
-      builder: (context, data) {
-        //if
-        if (data.hasError) {
-          return Center(child: Text("${data.error}"));
-        }
-        //else
+    // return FutureBuilder(
+    //   future: ReadJsonData(),
+    //   builder: (context, data) {
+    //     //if
+    //     if (data.hasError) {
+    //       return Center(child: Text("${data.error}"));
+    //     }
+    //     //else
 
-        else if (data.hasData) {
-          var items = data.data as List<MovieDataModel>;
-          return GridView.builder(
-              shrinkWrap: true,
-              itemCount: items.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  mainAxisExtent: 250),
-              itemBuilder: (context, index) {
-                final rating = items[index].rating ?? 0;
-                final imgurl = items[index].imageURL ?? "No Image";
-                return Column(
-                  children: [
-                    // Image.asset(categoryImages[index],
-                    //     height: 150, width: 200, fit: BoxFit.cover),
-                    10.heightBox,
-                    items[index]
-                        .name
-                        .toString()
-                        .text
-                        .color(black)
-                        .fontWeight(FontWeight.bold)
-                        .align(TextAlign.center)
-                        .make(),
-                    10.heightBox,
-                    (imgurl == "No Image")
-                        ? const SizedBox(
-                            height: 140,
-                            child: Image(
-                                image: NetworkImage(
-                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png"),
-                                fit: BoxFit.fill),
-                          )
-                        : SizedBox(
-                            height: 140,
-                            child: Image(
-                                image: NetworkImage(
-                                    items[index].imageURL.toString()),
-                                fit: BoxFit.fill),
-                          ),
+    //     else if (data.hasData) {
+    //       var items = data.data as List<MovieDataModel>;
+    //       return GridView.builder(
+    //           shrinkWrap: true,
+    //           itemCount: items.length,
+    //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    //               crossAxisCount: 2,
+    //               mainAxisSpacing: 8,
+    //               crossAxisSpacing: 8,
+    //               mainAxisExtent: 250),
+    //           itemBuilder: (context, index) {
+    //             final rating = items[index].rating ?? 0;
+    //             final imgurl = items[index].imageURL ?? "No Image";
+    //             return Column(
+    //               children: [
+    //                 // Image.asset(categoryImages[index],
+    //                 //     height: 150, width: 200, fit: BoxFit.cover),
+    //                 10.heightBox,
+    //                 items[index]
+    //                     .name
+    //                     .toString()
+    //                     .text
+    //                     .color(black)
+    //                     .fontWeight(FontWeight.bold)
+    //                     .align(TextAlign.center)
+    //                     .make(),
+    //                 10.heightBox,
+    //                 (imgurl == "No Image")
+    //                     ? const SizedBox(
+    //                         height: 140,
+    //                         child: Image(
+    //                             image: NetworkImage(
+    //                                 "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png"),
+    //                             fit: BoxFit.fill),
+    //                       )
+    //                     : SizedBox(
+    //                         height: 140,
+    //                         child: Image(
+    //                             image: NetworkImage(
+    //                                 items[index].imageURL.toString()),
+    //                             fit: BoxFit.fill),
+    //                       ),
 
-                    const Divider(
-                      thickness: 1.0,
-                      color: grey,
-                    ),
+    //                 const Divider(
+    //                   thickness: 1.0,
+    //                   color: grey,
+    //                 ),
 
-                    (rating == 0)
-                        ? "No Rating".text.align(TextAlign.center).make()
-                        : VxRating(
-                            isSelectable: false,
-                            value: rating,
-                            onRatingUpdate: (value) {},
-                            normalColor: grey,
-                            selectionColor: golden,
-                            count: 5,
-                            size: 25,
-                            maxRating: 10,
-                          ),
+    //                 (rating == 0)
+    //                     ? "No Rating".text.align(TextAlign.center).make()
+    //                     : VxRating(
+    //                         isSelectable: false,
+    //                         value: rating,
+    //                         onRatingUpdate: (value) {},
+    //                         normalColor: grey,
+    //                         selectionColor: golden,
+    //                         count: 5,
+    //                         size: 25,
+    //                         maxRating: 10,
+    //                       ),
 
-                    // "Rating : ${rating.toString()}"
-                    //     .text
-                    //     .align(TextAlign.center)
-                    //     .make(),
+    //                 // "Rating : ${rating.toString()}"
+    //                 //     .text
+    //                 //     .align(TextAlign.center)
+    //                 //     .make(),
 
-                    const Text("See More...",
-                        style: TextStyle(
-                            color: black, fontWeight: FontWeight.bold))
-                  ],
-                )
-                    .box
-                    .color(const Color.fromARGB(173, 255, 255, 255))
-                    .rounded
-                    .clip(Clip.antiAlias)
-                    .outerShadowMd
-                    .make()
-                    .onTap(() {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => MovieDetails(
-                            movieDataModel: items[index],
-                          )));
-                  // Get.to(() => MovieDetails(
-                  //     //title: categoryList[index]
-                  //     ));
-                });
-              });
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
+    //                 const Text("See More...",
+    //                     style: TextStyle(
+    //                         color: black, fontWeight: FontWeight.bold))
+    //               ],
+    //             )
+    //                 .box
+    //                 .color(const Color.fromARGB(173, 255, 255, 255))
+    //                 .rounded
+    //                 .clip(Clip.antiAlias)
+    //                 .outerShadowMd
+    //                 .make()
+    //                 .onTap(() {
+    //               Navigator.of(context).push(MaterialPageRoute(
+    //                   builder: (context) => MovieDetails(
+    //                         movieDataModel: items[index],
+    //                       )));
+    //               // Get.to(() => MovieDetails(
+    //               //     //title: categoryList[index]
+    //               //     ));
+    //             });
+    //           });
+    //     } else {
+    //       return const Center(child: CircularProgressIndicator());
+    //     }
+    //   },
+    // );
+    return GridView.builder(
+      shrinkWrap: true,
+      itemCount: _moviesData.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          mainAxisExtent: 250),
+      itemBuilder: (context, index) {
+        final rating = _moviesData[index].rating?.average ?? 0;
+        final imgurl = _moviesData[index].imageURL?.medium ?? "No Image";
+        return Column(
+          children: [
+            10.heightBox,
+            _moviesData[index]
+                .name
+                .toString()
+                .text
+                .color(black)
+                .fontWeight(FontWeight.bold)
+                .align(TextAlign.center)
+                .make(),
+            10.heightBox,
+            (imgurl == "No Image")
+                ? const SizedBox(
+                    height: 140,
+                    child: Image(
+                        image: NetworkImage(
+                            "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png"),
+                        fit: BoxFit.fill),
+                  )
+                : SizedBox(
+                    height: 140,
+                    child: Image(
+                        image: NetworkImage(
+                            _moviesData[index].imageURL!.medium.toString()),
+                        fit: BoxFit.fill),
+                  ),
+            const Divider(
+              thickness: 1.0,
+              color: grey,
+            ),
+            (rating == 0)
+                ? "No Rating".text.align(TextAlign.center).make()
+                : VxRating(
+                    isSelectable: false,
+                    value: rating,
+                    onRatingUpdate: (value) {},
+                    normalColor: grey,
+                    selectionColor: golden,
+                    count: 5,
+                    size: 25,
+                    maxRating: 10,
+                  ),
+            const Text("See More...",
+                style: TextStyle(color: black, fontWeight: FontWeight.bold))
+          ],
+        )
+            .box
+            .color(const Color.fromARGB(173, 255, 255, 255))
+            .rounded
+            .clip(Clip.antiAlias)
+            .outerShadowMd
+            .make()
+            .onTap(() {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => MovieDetails(
+                    movieDataModel: _moviesData[index],
+                  )));
+        });
       },
     );
   }

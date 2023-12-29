@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 class MovieDataModel {
   double? score;
   String? name;
@@ -6,8 +5,8 @@ class MovieDataModel {
   String? language;
   String? premiered;
   String? ended;
-  double? rating;
-  String? imageURL;
+  Rating? rating;
+  Imagea? imageURL;
   String? summary;
 
   MovieDataModel(
@@ -23,13 +22,40 @@ class MovieDataModel {
 
   MovieDataModel.fromJson(Map<String, dynamic> json) {
     score = json['score'];
-    name = json['name'];
-    type = json['type'];
-    language = json['language'];
-    premiered = json['premiered'];
-    ended = json['ended'];
-    rating = json['rating'];
-    imageURL = json['image'];
-    summary = json['summary'];
+    name = json['show']['name'];
+    type = json['show']['type'];
+    language = json['show']['language'];
+    premiered = json['show']['premiered'];
+    ended = json['show']['ended'];
+    rating = Rating.fromJson(json['show']['rating']);
+    if (json['show']['image'] != null) {
+      imageURL = Imagea.fromJson(json['show']['image']);
+    } else {
+      imageURL = null;
+    }
+    ;
+    summary = json['show']['summary'];
+  }
+}
+
+class Rating {
+  double? average;
+
+  Rating({this.average});
+
+  Rating.fromJson(Map<String, dynamic> json) {
+    average = json['average']?.toDouble();
+  }
+}
+
+class Imagea {
+  String? medium;
+  String? original;
+
+  Imagea({this.medium, this.original});
+
+  Imagea.fromJson(Map<String, dynamic> json) {
+    medium = json['medium'];
+    original = json['original'];
   }
 }
