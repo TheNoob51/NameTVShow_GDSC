@@ -43,10 +43,10 @@ class _MyHomePageState extends State<MyHomePage> {
         final List<dynamic> list = json.decode(response.body);
         _moviesData = list.map((e) => MovieDataModel.fromJson(e)).toList();
       } else {
-        print('Failed to load data: ${response.statusCode}');
+        SnackBar(content: Text("Failed to load data: ${response.statusCode}"));
       }
     } catch (error) {
-      print('Error: $error');
+      SnackBar(content: Text('Error: $error'));
     }
   }
 

@@ -33,7 +33,6 @@ class MovieDataModel {
     } else {
       imageURL = null;
     }
-    ;
     summary = json['show']['summary'];
   }
 }
